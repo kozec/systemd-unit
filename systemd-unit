@@ -81,6 +81,14 @@ TYPE=$(read_ini $FILE Type simple)
 
 [ x"$ENVIRON" != x ] && [ -e "$ENVIRON" ] && source "$ENVIRON"
 
+# Read Environment variable
+ENVIRONMENT=$(read_ini $FILE Environment)
+[ x"$ENVIRONMENT" != x ] && export $ENVIRONMENT
+
+# Read&use WorkingDirectory
+WORKDIR=$(read_ini $FILE WorkingDirectory)
+[ x"WORKDIR" != x ] && cd "$WORKDIR"
+
 case "$1" in
   start)
 	EXEC=$(read_ini $FILE ExecStart /bin/false)
@@ -211,6 +219,10 @@ case "$1" in
 		$0	# reload command is not available; displays help message
 		exit 1
 	fi
+  ;;
+  print)
+	cat $FILE
+	exit 0
   ;;
   *)
 	RELOADEXEC=$(read_ini $FILE ExecReload)
